@@ -11,9 +11,8 @@ class ReceiverVerticle extends AbstractVerticle {
     println "ReceiverVerticle <<<<<<<<< iniciado: ${instanceId}"
 
     vertx.eventBus().consumer("messages.channel") { msg ->
-      println msg.headers()
-      println msg.body().class
       println "ReceiverVerticle: Mensaje recibido -> ${msg.body()}"
+      msg.reply("Enviando respuesta: ${msg.body()}-OK")
 
     }
   }
