@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WS Client</title>
+  <script src="https://unpkg.io/sockjs-client@1.5.0/dist/sockjs.min.js"></script>
+  <script src='https://unpkg.io/@vertx/eventbus-bridge-client.js@1.0.0-1/vertx-eventbus.js'></script>
+</head>
+<body>
+  <h1>Chat de WS</h1>
+  <div>
+    <label for="messae">Message:</label>
+    <input type="text" id="message" />
+    <button onclick="sendMessage()">Enviar</button>
+  </div>
+  <div id="messages">
+    <h2>Messages</h2>
+  </div>
+
+  <script>
+
+    const eventBus = new EventBus('http://localhost:8082/eventbus');
+    const messages = document.getElementById("messages");
+
+    eventBus.onopen = () => {
+      console.log("Conexión al EB establecida");
+
+      eventBus.registerHandler("chat.general", (err, message) => {
+        if(err){
+          console.error("Error:", err);
+        } else {
+          const p = document.createElement("p");
+          p.textContent = message.body;
+          messages.appendChild(p);
+        }
+      });
+    };
+
+    function sendMessage() {
+      const message = document.getElementById("message");
+      const textMessage = message.value;
+      if(message) {
+        eventBus.publish("chat.publish", textMessage);
+        message.value = "";
+      }
+    }
+
+  </script>
+
+</body>
+</html>
