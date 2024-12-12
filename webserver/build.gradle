@@ -10,9 +10,11 @@ repositories {
 dependencies {
   implementation 'io.vertx:vertx-core:4.5.11'
   implementation 'io.vertx:vertx-web:4.5.11'
-  implementation 'io.vertx:vertx-hazelcast:4.5.11'
+  implementation 'io.vertx:vertx-pg-client:4.5.11'
+  // implementation 'io.vertx:vertx-hazelcast:4.5.11'
   implementation 'org.apache.groovy:groovy:4.0.24'
   implementation 'ch.qos.logback:logback-classic:1.5.12'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
 
   implementation 'io.netty:netty-resolver-dns-native-macos:4.1.115.Final:osx-aarch_64'
 
@@ -23,5 +25,6 @@ application {
 }
 
 tasks.run {
-  args = ["run", "com.makingdevs.MainVerticle", "--cluster"]
+  //args = ["run", "com.makingdevs.MainVerticle", "--cluster"]
+  args = ["run", "com.makingdevs.MainVerticle"]
 }
