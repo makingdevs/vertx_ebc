@@ -10,6 +10,7 @@ repositories {
 dependencies {
   implementation 'io.vertx:vertx-core:4.5.11'
   implementation 'io.vertx:vertx-web:4.5.11'
+  implementation 'io.vertx:vertx-hazelcast:4.5.11'
   implementation 'org.apache.groovy:groovy:4.0.24'
   implementation 'ch.qos.logback:logback-classic:1.5.12'
 
@@ -22,5 +23,5 @@ application {
 }
 
 tasks.run {
-  args = ["run", "com.makingdevs.MainVerticle"]
+  args = ["run", "com.makingdevs.MainVerticle", "--cluster"]
 }
