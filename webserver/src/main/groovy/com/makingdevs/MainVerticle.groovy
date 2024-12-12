@@ -4,10 +4,12 @@ import io.vertx.core.AbstractVerticle
 import io.vertx.core.DeploymentOptions
 import io.vertx.ext.web.Router
 import io.vertx.core.json.JsonObject
+import io.vertx.ext.web.handler.StaticHandler
 
 class MainVerticle extends AbstractVerticle {
 
   private Map<Integer, JsonObject> database = [:]
+  private static String AUTH_TOKEN = "1234567890"
 
   @Override
   void start() {
@@ -15,9 +17,23 @@ class MainVerticle extends AbstractVerticle {
 
     Router router = Router.router(vertx);
 
+    router.route("/static/*").handler(StaticHandler.create());
+
     router.route('/products*').handler { ctx ->
-      println ctx.request().properties
+      ctx.response()
+        .putHeader('Content-Type', 'application/json')
       ctx.next()
+    }
+
+    router.route('/products*').handler { ctx ->
+      String token = ctx.request().getHeader("Authorization")
+      if(token != AUTH_TOKEN) {
+        ctx.response()
+          .setStatusCode(401)
+          .end('{"Error": "No autorizado"}')
+      } else {
+        ctx.next()
+      }
     }
 
     configureRoutes(router)
@@ -42,7 +58,6 @@ class MainVerticle extends AbstractVerticle {
 
     router.get('/products').handler { ctx ->
       ctx.response()
-        .putHeader('Content-Type', 'application/json')
         .end(database.values().toString())
     }
 
@@ -51,7 +66,6 @@ class MainVerticle extends AbstractVerticle {
       JsonObject product = database[producId]
       if(product) {
         ctx.response()
-          .putHeader('Content-Type', 'application/json')
           .end(product.encodePrettily())
       } else {
         ctx.response()
@@ -70,7 +84,6 @@ class MainVerticle extends AbstractVerticle {
 
         ctx.response()
           .setStatusCode(201)
-          .putHeader('Content-Type', 'application/json')
           .end(newProduct.encodePrettily())
       }
     }
