@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WS Client</title>
+</head>
+<body>
+  <h1>Chat de WS</h1>
+  <div>
+    <label for="messae">Message:</label>
+    <input type="text" id="message" />
+    <button onclick="sendMessage()">Enviar</button>
+  </div>
+  <div id="messages">
+    <h2>Messages</h2>
+  </div>
+
+  <script>
+    const ws = new WebSocket("ws://localhost:8082/ws");
+    const messages = document.getElementById("messages");
+
+    ws.onmessage = (event) => {
+      const p = document.createElement("p");
+      p.textContent = event.data;
+      messages.appendChild(p);
+    };
+
+    ws.onclose = () => {
+      console.log("WS Closed");
+    }
+
+    ws.onerror = (error) => {
+      console.error("WS ERROR:", error);
+    }
+
+    function sendMessage() {
+      const message = document.getElementById("message");
+      const textMessage = message.value;
+      debugger;
+      if(message) {
+        ws.send(textMessage);
+        message.value = "";
+      }
+    }
+
+  </script>
+
+</body>
+</html>
