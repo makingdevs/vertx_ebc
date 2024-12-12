@@ -12,8 +12,14 @@ class ReceiverVerticle extends AbstractVerticle {
 
     vertx.eventBus().consumer("messages.channel") { msg ->
       println "ReceiverVerticle: Mensaje recibido -> ${msg.body()}"
-      msg.reply("Enviando respuesta: ${msg.body()}-OK")
+      // msg.reply("Enviando respuesta: ${msg.body()}-OK")
+      // msg ok
+      // if msg.user.group == "ADMIN", notify
+    }
 
+    vertx.eventBus().consumer("messages.special") { msg ->
+      println "ReceiverVerticle - Special: Mensaje recibido -> ${msg.body()}"
+      // msg.reply("Enviando respuesta: ${msg.body()}-OK")
     }
   }
 }
